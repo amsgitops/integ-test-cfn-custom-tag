@@ -23,7 +23,7 @@ Resources:
     Type: AWS::SNS::Topic
     Properties:
       TopicName: !Sub '${ResourcePrefix}-${Stage}-${AWS::Region}'
-      DisplayName: CodeKeeper Test Alerts
+      DisplayName: CodeKeeper custom tag 1791343980
       Tags:
         - Key: CodeKeeperRepo
           Value: !Ref RepositoryId
