@@ -1,0 +1,35 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >-
+  CodeKeeper test fixture: a single SNS topic whose repository tag uses a
+  non-default key, to check repository resolution honors the tag key configured
+  on the repository rather than a hardcoded default.
+Parameters:
+  Stage:
+    Type: String
+    AllowedPattern: '^[a-z0-9]([a-z0-9-]*[a-z0-9])?$'
+    MaxLength: 12
+    Description: Service stage (e.g., beta, gamma)
+  ResourcePrefix:
+    Type: String
+    Default: codekeeper-test-cfn-ctag
+    AllowedPattern: '^[a-z0-9]([a-z0-9-]*[a-z0-9])?$'
+    MaxLength: 25
+    Description: Prefix for resource names
+  RepositoryId:
+    Type: String
+    Description: Repository identifier for CodeKeeper agent resource resolution
+Resources:
+  AlertsTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: !Sub '${ResourcePrefix}-${Stage}-${AWS::Region}'
+      DisplayName: CodeKeeper Test Alerts
+      Tags:
+        - Key: CodeKeeperRepo
+          Value: !Ref RepositoryId
+        - Key: Stage
+          Value: !Ref Stage
+Outputs:
+  AlertsTopicArn:
+    Description: ARN of the alerts SNS topic
+    Value: !Ref AlertsTopic
